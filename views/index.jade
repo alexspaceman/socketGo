@@ -1,32 +1,55 @@
 extends layout
 
 block body
-  h1 Angular Socket.io IM Demo App
+  h1.title ngGo
   div(ng-controller='AppCtrl')
-    .col
-      h3 Messages
-      .overflowable
-        p(ng-repeat='message in messages',
-          ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
-
-    .col
-      h3 Users
-      .overflowable
-        p(ng-repeat='user in users') {{user}}
-
     .clr
-      form(ng-submit='sendMessage()')
-        | Message: 
-        input(size='60', ng-model='message')
-        input(type='submit', value='Send')
+      | Welcome player {{playerID}}.
+      span(ng-hide='users.length==2')  Waiting for an opponent..
+      span(ng-show='users.length==2')
+        span(ng-show='globalVar.currentPlayer == playerID')  It's your turn
+        span(ng-show='globalVar.currentPlayer != playerID')  It's your opponent's turn
+        button(class="button" ng-click="pass()")
+          | pass
+    div.hud
+      span.space.black 
+      | {{globalVar.blackScore}}  
+      span.space.white
+      | {{globalVar.whiteScore}}
 
-    .clr
-      h3 Change your name
-      p Your current user name is {{name}}
+    div#board(ng-style="boardStyle" ng-show="users.length==2")
+      div(ng-repeat="row in goBoard")
+          div.space(ng-repeat="cell in row" 
+          id="{{cell.idNum}}" 
+          class="{{cell.idNum}} {{cell.colorStatus}} {{cell.boardCornerSide}} {{cell.mouseOverStatus}} {{cell.lastMoveStatus}}"
+          ng-mouseenter="cell.mouseOverStatus = 'mouseOver'" 
+          ng-mouseleave="cell.mouseOverStatus = ''"
+          ng-mouseup="mouseUpFunction(cell, $parent.$index, $index)"
+          ng-style="cellWidth")
+           
+    //
+      p Welcome {{name}}
+      .col
+        h3 Messages
+        .overflowable
+          p(ng-repeat='message in messages',
+            ng-class='{alert: message.user == "chatroom"}') {{message.user}}: {{message.text}}
+
+      .col
+        h3 Users
+        .overflowable
+          p(ng-repeat='user in users') {{user}}
+
+      .clr
+        form(ng-submit='sendMessage()')
+          | Message: 
+          input(size='60', ng-model='message')
+          input(type='submit', value='Send')
+
       form(ng-submit='changeName()')
-        input(ng-model='newName')
-        input(type='submit', value='Change Name')
-
+          input(ng-model='newName')
+          input(type='submit', value='Change Name')
+    
   script(src='js/lib/angular/angular.js')
   script(src='/socket.io/socket.io.js')
   script(src='js/app.js')

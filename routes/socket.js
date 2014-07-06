@@ -48,14 +48,22 @@ var userNames = (function () {
   };
 }());
 
+
+
+ var currentPlayer = 1;
 // export function for listening to the socket
 module.exports = function (socket) {
   var name = userNames.getGuestName();
+ 
+  var playerID = userNames.get().length;
 
+  //var name = 'bob';
   // send the new user their name and a list of users
   socket.emit('init', {
     name: name,
-    users: userNames.get()
+    playerID: playerID,
+    users: userNames.get(),
+    currentPlayer: currentPlayer
   });
 
   // notify other clients that a new user has joined
@@ -68,6 +76,25 @@ module.exports = function (socket) {
     socket.broadcast.emit('send:message', {
       user: name,
       text: data.message
+    });
+  });
+
+  socket.on('pass', function (data) {
+    //data.currentPlayer++;
+    socket.broadcast.emit('pass', {
+      number: data.turnNumber,
+      counter: data.turnCounter,
+      color: data.turnColor,
+      currentPlayer: data.currentPlayer
+    });
+  });
+
+  socket.on('play', function (data) {
+    socket.broadcast.emit('play', {
+      number: data.turnNumber,
+      color: data.turnColor,
+      board: data.board,
+      currentPlayer: data.currentPlayer
     });
   });
 
