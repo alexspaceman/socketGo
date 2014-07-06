@@ -191,6 +191,7 @@ function AppCtrl($scope, socket) {
           $scope.globalVar.idsTakenThisTurn = [];     //reset the idsTakenThisTurn
           resetCheckedStatus($scope.goBoard);
           resetToTakeStatus($scope.goBoard);
+          resetMouseOverStatus($scope.goBoard);
 
           $scope.globalVar.turnColor = getTurnColor($scope.globalVar.turnNumber, cell, $scope.globalVar.turnColor);
           
@@ -199,13 +200,15 @@ function AppCtrl($scope, socket) {
           checkSingleIllegal(cell);
           checkMultipleIllegal(cell);
           illegalRepeatMove(cell);
+
+          $scope.globalVar.piecesTakenThisTurn = 0;
+          $scope.globalVar.turnNumber++;
+          $scope.globalVar.currentPlayer = $scope.globalVar.currentPlayer == 1 ? 2 : 1;
         }
 
-        $scope.globalVar.turnNumber++;
+        resetMouseOverStatus($scope.goBoard);
         $scope.globalVar.passCounter = 0;
-        $scope.globalVar.piecesTakenThisTurn = 0;
-        $scope.globalVar.currentPlayer = $scope.globalVar.currentPlayer == 1 ? 2 : 1;
-
+        
         socket.emit('play', {
           turnNumber: $scope.globalVar.turnNumber,
           turnColor: $scope.globalVar.turnColor,
@@ -265,6 +268,15 @@ function AppCtrl($scope, socket) {
     for(var i = 0; i < goBoard.length; i++){
       for(var j = 0; j < goBoard[i].length; j++){
         goBoard[i][j].toTakeStatus = false;
+      }
+    }
+  }
+
+//RESET THE cell.mouseOverStatus STRING
+  function resetMouseOverStatus(goBoard){
+    for(var i = 0; i < goBoard.length; i++){
+      for(var j = 0; j < goBoard[i].length; j++){
+        goBoard[i][j].mouseOverStatus = '';
       }
     }
   }
