@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 // Keep track of which names are used so that there are no duplicates
 var userNames = (function () {
   var names = {};
@@ -94,8 +96,16 @@ module.exports = function (socket) {
       number: data.turnNumber,
       color: data.turnColor,
       board: data.board,
-      currentPlayer: data.currentPlayer
+      currentPlayer: data.currentPlayer,
+      idsTakenThisTurn: data.idsTakenThisTurn
     });
+    /*fs.writeFile("/tmp/test", "Hey there!", function(err) {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log("The file was saved!");
+        }
+    }); */
   });
 
   // validate a user's name change, and broadcast it on success

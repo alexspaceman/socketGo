@@ -30,6 +30,7 @@ function AppCtrl($scope, socket) {
     $scope.globalVar.turnColor = data.color;
     $scope.goBoard = data.board;
     $scope.globalVar.currentPlayer = data.currentPlayer;
+    $scope.globalVar.idsTakenThisTurn = data.idsTakenThisTurn;
   });
 
   socket.on('change:name', function (data) {
@@ -209,7 +210,8 @@ function AppCtrl($scope, socket) {
           turnNumber: $scope.globalVar.turnNumber,
           turnColor: $scope.globalVar.turnColor,
           board: $scope.goBoard,
-          currentPlayer: $scope.globalVar.currentPlayer
+          currentPlayer: $scope.globalVar.currentPlayer,
+          idsTakenThisTurn: $scope.globalVar.idsTakenThisTurn
         });
       }
     }
